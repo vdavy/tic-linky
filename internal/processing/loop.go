@@ -18,7 +18,7 @@ func StartProcessing(streamingChan <-chan string, extChan <-chan bool, exitWG *s
 				keepGoing = false
 			}
 		}
-		exitWG.Done()
 		logger.Debug("Exiting processing")
+		exitWG.Done()
 	}(streamingChan, extChan, exitWG)
 }

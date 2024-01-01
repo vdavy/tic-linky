@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/tarm/serial"
 	"io"
+	"strings"
 	"sync"
 )
 
@@ -32,7 +33,8 @@ func handleReader(buffer *bufio.Reader, streamingChan chan<- string, exitChan ch
 	for keepGoing {
 		line, err := buffer.ReadString(lineSeparator)
 		if err != nil {
-			if errors.Is(err, io.EOF) { // io.EOF means closing serial port
+			// io.EOF means closing serial port or reported error means closed port
+			if errors.Is(err, io.EOF) || strings.Contains(err.Error(), "file already closed") {
 				keepGoing = false
 				exitChan <- true
 				close(streamingChan)
@@ -45,6 +47,6 @@ func handleReader(buffer *bufio.Reader, streamingChan chan<- string, exitChan ch
 		}
 	}
 
-	exitWG.Done()
 	logger.Debug("Serial port reader closed")
+	exitWG.Done()
 }
