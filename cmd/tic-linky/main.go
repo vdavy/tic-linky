@@ -4,6 +4,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"tic-linky/internal/config"
+	"tic-linky/internal/influxdb"
 	"tic-linky/internal/processing"
 	"tic-linky/internal/serialport"
 )
@@ -27,6 +28,7 @@ func main() {
 	config.ParseEnvVars()
 
 	// start all the stuff
+	influxdb.NewInfluxdbClient()
 	serialPort := serialport.CreateSerialPort()
 	serialPort.ExitWG.Add(1)
 	processing.StartProcessing(serialPort.StreamingChan, serialPort.ExitChan, serialPort.ExitWG)
@@ -34,6 +36,7 @@ func main() {
 	// wait for exit signal
 	waitForSignal(serialPort)
 	serialPort.ExitWG.Wait()
+	influxdb.CloseInfluxDBConnection()
 	logger.Info("Final exit")
 }
 
