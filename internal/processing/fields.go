@@ -32,4 +32,9 @@ const (
 	sinstsField = "SINSTS"
 	urms1Field  = "URMS1"
 	irms1Field  = "IRMS1"
+
+	// dated fields
+	smaxsnField = "SMAXSN"
+	ccasnField  = "CCASN"
+	umoy1Field  = "UMOY1"
 )

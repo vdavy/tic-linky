@@ -8,9 +8,17 @@ import (
 
 // frameData context data struct
 type frameData struct {
-	date     *time.Time
-	indexMap map[string]uint64
-	powerMap map[string]uint64
+	date                    *time.Time
+	indexMap                map[string]uint64
+	powerMap                map[string]uint64
+	datedFieldsMap          map[string]datedField
+	datedFieldsWriteFlagMap map[string]bool
+}
+
+// datedField type for dated field
+type datedField struct {
+	date  *time.Time
+	value uint64
 }
 
 // processLine process a single line od data
@@ -42,7 +50,7 @@ func (frameData *frameData) processLine(line string) {
 func (frameData *frameData) routeLineData(splitLine []string) {
 	switch splitLine[fieldNameIndex] {
 	case dateField:
-		frameData.parseDate(splitLine[dateFieldIndex])
+		parseDate(&frameData.date, splitLine[dateFieldIndex])
 	case eastField,
 		easf01Field, easf02Field, easf03Field, easf04Field, easf05Field,
 		easf06Field, easf07Field, easf08Field, easf09Field, easf10Field,
@@ -50,10 +58,17 @@ func (frameData *frameData) routeLineData(splitLine []string) {
 		parseFieldAsUint64(frameData.indexMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
 	case sinstsField, urms1Field, irms1Field:
 		parseFieldAsUint64(frameData.powerMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
+	case smaxsnField, ccasnField, umoy1Field:
+		frameData.parseDatedField(splitLine)
 	}
 }
 
 // processEndOfFrame send the collected data to influxdb
 func (frameData *frameData) processEndOfFrame() {
-	logger.Debugf("Frame data : %v", spew.Sdump(frameData))
+	spew.Dump(frameData)
+	for fieldName, flaggedToSend := range frameData.datedFieldsWriteFlagMap {
+		if flaggedToSend {
+			frameData.datedFieldsWriteFlagMap[fieldName] = false
+		}
+	}
 }

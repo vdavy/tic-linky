@@ -41,8 +41,28 @@ func internalProcessing(streamingChan <-chan string, extChan <-chan bool, exitWG
 
 // initCurrentFrameData init current frame data with non nil value
 func initCurrentFrameData() {
+	// keep map existing values (if there are)
+	var datedFieldsMap map[string]datedField
+	var datedFieldsWriteFlagMap map[string]bool
+
+	// for dated fields map
+	if currentFrameData != nil && currentFrameData.datedFieldsMap != nil {
+		datedFieldsMap = currentFrameData.datedFieldsMap
+	} else {
+		datedFieldsMap = make(map[string]datedField)
+	}
+
+	// for dated field write flag map
+	if currentFrameData != nil && currentFrameData.datedFieldsWriteFlagMap != nil {
+		datedFieldsWriteFlagMap = currentFrameData.datedFieldsWriteFlagMap
+	} else {
+		datedFieldsWriteFlagMap = make(map[string]bool)
+	}
+
 	currentFrameData = &frameData{
-		indexMap: make(map[string]uint64),
-		powerMap: make(map[string]uint64),
+		indexMap:                make(map[string]uint64),
+		powerMap:                make(map[string]uint64),
+		datedFieldsMap:          datedFieldsMap,
+		datedFieldsWriteFlagMap: datedFieldsWriteFlagMap,
 	}
 }
