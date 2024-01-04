@@ -65,6 +65,7 @@ func (frameData *frameData) routeLineData(splitLine []string) {
 
 // processEndOfFrame send the collected data to influxdb
 func (frameData *frameData) processEndOfFrame() {
+	logger.Debug("Data :")
 	spew.Dump(frameData)
 	for fieldName, flaggedToSend := range frameData.datedFieldsWriteFlagMap {
 		if flaggedToSend {
