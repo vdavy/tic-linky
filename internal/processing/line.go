@@ -10,6 +10,8 @@ import (
 type frameData struct {
 	date                    *time.Time
 	indexMap                map[string]uint64
+	productionIndex         int
+	distributionIndex       int
 	powerMap                map[string]uint64
 	datedFieldsMap          map[string]datedField
 	datedFieldsWriteFlagMap map[string]bool

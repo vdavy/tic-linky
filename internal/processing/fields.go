@@ -37,4 +37,7 @@ const (
 	smaxsnField = "SMAXSN"
 	ccasnField  = "CCASN"
 	umoy1Field  = "UMOY1"
+
+	// status reg
+	stgeField = "STGE"
 )

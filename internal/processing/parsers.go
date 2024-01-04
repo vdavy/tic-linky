@@ -1,6 +1,9 @@
 package processing
 
 import (
+	"encoding/binary"
+	"encoding/hex"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -54,4 +57,15 @@ func (frameData *frameData) parseDatedField(line []string) {
 	} else {
 		logger.Warnf("Nil value for date in data field %s", fieldDate)
 	}
+}
+
+func (frameData *frameData) parseSTGE(dataValue string) {
+	hexBytes, err := hex.DecodeString(dataValue)
+	if err != nil {
+		logger.WithError(err).Warnf("Error decoding STGE field value %s", dataValue)
+		return
+	}
+	stgeValue := binary.BigEndian.Uint32(hexBytes)
+	frameData.productionIndex = int((stgeValue & (0xF << 10)) >> 10)
+	fmt.Printf("")
 }
