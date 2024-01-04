@@ -3,12 +3,15 @@ package processing
 import (
 	"encoding/binary"
 	"encoding/hex"
-	"fmt"
 	"strconv"
 	"time"
 )
 
-const dateValueFormat = "060102150405"
+const (
+	dateValueFormat    = "060102150405"
+	productionOffSet   = 10
+	distributionOffSet = 14
+)
 
 // parseDate parse date field (used for influxdb point date)
 func parseDate(dateField **time.Time, dataValue string) {
@@ -66,6 +69,6 @@ func (frameData *frameData) parseSTGE(dataValue string) {
 		return
 	}
 	stgeValue := binary.BigEndian.Uint32(hexBytes)
-	frameData.productionIndex = int((stgeValue & (0xF << 10)) >> 10)
-	fmt.Printf("")
+	frameData.productionIndex = int((stgeValue&(0xF<<productionOffSet))>>productionOffSet) + 1
+	frameData.distributionIndex = int((stgeValue&(0x3<<distributionOffSet))>>distributionOffSet) + 1
 }

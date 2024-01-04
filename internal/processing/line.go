@@ -62,6 +62,8 @@ func (frameData *frameData) routeLineData(splitLine []string) {
 		parseFieldAsUint64(frameData.powerMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
 	case smaxsnField, ccasnField, umoy1Field:
 		frameData.parseDatedField(splitLine)
+	case stgeField:
+		frameData.parseSTGE(splitLine[dateFieldIndex])
 	}
 }
 
