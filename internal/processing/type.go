@@ -6,13 +6,15 @@ import "time"
 type frameData struct {
 	date *time.Time // global date
 
-	// indexs data
-	indexMap          map[string]uint64
+	// indexes data
+	indexesMap        map[string]int64
 	productionIndex   int
 	distributionIndex int
 
 	// power data
-	powerMap                map[string]uint64
+	powerMap map[string]int64
+
+	// dated data
 	datedFieldsMap          map[string]datedField
 	datedFieldsWriteFlagMap map[string]bool
 
@@ -34,5 +36,5 @@ type frameData struct {
 // datedField type for dated field
 type datedField struct {
 	date  *time.Time
-	value uint64
+	value int64
 }

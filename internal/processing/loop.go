@@ -60,8 +60,8 @@ func initCurrentFrameData() {
 	}
 
 	currentFrameData = &frameData{
-		indexMap:                make(map[string]uint64),
-		powerMap:                make(map[string]uint64),
+		indexesMap:              make(map[string]int64),
+		powerMap:                make(map[string]int64),
 		datedFieldsMap:          datedFieldsMap,
 		datedFieldsWriteFlagMap: datedFieldsWriteFlagMap,
 	}

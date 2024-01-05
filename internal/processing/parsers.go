@@ -11,7 +11,7 @@ const dateValueFormat = "060102150405"
 
 // parseDate parse date field (used for influxdb point date)
 func parseDate(dateField **time.Time, dataValue string) {
-	frameDate, err := time.Parse(dateValueFormat, dataValue[1:])
+	frameDate, err := time.ParseInLocation(dateValueFormat, dataValue[1:], time.Local)
 	if err != nil {
 		logger.WithError(err).Warnf("Error parsing frame date %s", dataValue)
 		return
@@ -20,9 +20,9 @@ func parseDate(dateField **time.Time, dataValue string) {
 	*dateField = &frameDate
 }
 
-// parseFieldAsUint64 parse and store field and field value into map
-func parseFieldAsUint64(fieldMap map[string]uint64, fieldName, fieldValue string) {
-	fieldValueAsInt, err := strconv.ParseUint(fieldValue, 10, 64)
+// parseFieldAsInt64 parse and store field and field value into map
+func parseFieldAsInt64(fieldMap map[string]int64, fieldName, fieldValue string) {
+	fieldValueAsInt, err := strconv.ParseInt(fieldValue, 10, 64)
 	if err != nil {
 		logger.WithError(err).Warnf("Error converting field value %s for field name %s", fieldValue, fieldName)
 		return
@@ -40,7 +40,7 @@ func (frameData *frameData) parseDatedField(line []string) {
 	if fieldDate != nil { // date properly parsed
 		if frameData.datedFieldsMap[fieldName].date == nil || // we don't have a date
 			(frameData.datedFieldsMap[fieldName].date != nil && *frameData.datedFieldsMap[fieldName].date != *fieldDate) { // or the saved date is different from parsed date
-			fieldValueAsInt, err := strconv.ParseUint(line[valueFieldIndex], 10, 64)
+			fieldValueAsInt, err := strconv.ParseInt(line[valueFieldIndex], 10, 64)
 			if err != nil {
 				logger.WithError(err).Warnf("Error converting field value %s for dated field name %s", line[valueFieldIndex], fieldName)
 				return

@@ -24,14 +24,14 @@ func TestDateParser_Error(t *testing.T) {
 }
 
 func TestIndexParser_GoodCase(t *testing.T) {
-	fieldMap := make(map[string]uint64)
-	parseFieldAsUint64(fieldMap, eastField, "035504800")
-	assert.Equal(t, uint64(35504800), fieldMap[eastField])
+	fieldMap := make(map[string]int64)
+	parseFieldAsInt64(fieldMap, eastField, "035504800")
+	assert.Equal(t, int64(35504800), fieldMap[eastField])
 }
 
 func TestIndexParser_WrongCase(t *testing.T) {
-	fieldMap := make(map[string]uint64)
-	parseFieldAsUint64(fieldMap, eastField, "035504ab800")
+	fieldMap := make(map[string]int64)
+	parseFieldAsInt64(fieldMap, eastField, "035504ab800")
 	assert.Len(t, fieldMap, 0)
 	assert.Zero(t, fieldMap[eastField])
 }
@@ -39,7 +39,7 @@ func TestIndexParser_WrongCase(t *testing.T) {
 func TestParseDatedField(t *testing.T) {
 	initCurrentFrameData()
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130230", "05160"})
-	assert.Equal(t, uint64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Equal(t, "240103130230", currentFrameData.datedFieldsMap["SMAXSN"].date.Format(dateValueFormat))
 	assert.True(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 }
@@ -50,7 +50,7 @@ func TestParseDatedField_WrongHour(t *testing.T) {
 	initCurrentFrameData()
 
 	currentFrameData.parseDatedField([]string{"SMAXSN", "ZZZ", "05160"})
-	assert.Equal(t, uint64(0), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(0), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Nil(t, currentFrameData.datedFieldsMap["SMAXSN"].date)
 	assert.False(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 }
@@ -61,7 +61,7 @@ func TestParseDatedField_WrongValue(t *testing.T) {
 	initCurrentFrameData()
 
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130230", "ZZZ"})
-	assert.Equal(t, uint64(0), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(0), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Nil(t, currentFrameData.datedFieldsMap["SMAXSN"].date)
 	assert.False(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 }
@@ -72,13 +72,13 @@ func TestParseDatedField_SecondAdd_NoWrite(t *testing.T) {
 	initCurrentFrameData()
 
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130230", "05160"})
-	assert.Equal(t, uint64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Equal(t, "240103130230", currentFrameData.datedFieldsMap["SMAXSN"].date.Format(dateValueFormat))
 	assert.True(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 
 	currentFrameData.datedFieldsWriteFlagMap["SMAXSN"] = false
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130230", "05161"})
-	assert.Equal(t, uint64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Equal(t, "240103130230", currentFrameData.datedFieldsMap["SMAXSN"].date.Format(dateValueFormat))
 	assert.False(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 }
@@ -89,13 +89,13 @@ func TestParseDatedField_SecondAdd_WithWrite(t *testing.T) {
 	initCurrentFrameData()
 
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130230", "05160"})
-	assert.Equal(t, uint64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(5160), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Equal(t, "240103130230", currentFrameData.datedFieldsMap["SMAXSN"].date.Format(dateValueFormat))
 	assert.True(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 
 	currentFrameData.datedFieldsWriteFlagMap["SMAXSN"] = false
 	currentFrameData.parseDatedField([]string{"SMAXSN", "H240103130231", "05161"})
-	assert.Equal(t, uint64(5161), currentFrameData.datedFieldsMap["SMAXSN"].value)
+	assert.Equal(t, int64(5161), currentFrameData.datedFieldsMap["SMAXSN"].value)
 	assert.Equal(t, "240103130231", currentFrameData.datedFieldsMap["SMAXSN"].date.Format(dateValueFormat))
 	assert.True(t, currentFrameData.datedFieldsWriteFlagMap["SMAXSN"])
 }

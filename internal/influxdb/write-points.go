@@ -6,19 +6,20 @@ import (
 )
 
 // WritePointsIntoInflux write points into Influx
-func WritePointsIntoInflux(influxdbPoints ...*client.Point) {
+func WritePointsIntoInflux(influxdbPoints ...*client.Point) bool {
 	batchPoint, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database: config.InfluxdbDatabase,
 	})
 	if err != nil {
 		logger.WithError(err).Error("Error creating batch point for Influx")
-		return
+		return false
 	}
 
 	batchPoint.AddPoints(influxdbPoints)
 	if err := influxDBClient.Write(batchPoint); err != nil {
 		logger.WithError(err).Error("Error inserting points into InfluxDB")
-		return
+		return false
 	}
-	logger.Debugf("Inserted %d points into InfluxDB", len(influxdbPoints))
+
+	return true
 }

@@ -15,6 +15,47 @@ screen /dev/ttyAMA0 9600,cs7,parenb,-parodd,-cstopb
 
 > Activer le port série sur le rasp : https://www.framboise314.fr/utiliser-le-port-serie-du-raspberry-pi-3-et-du-pi-zero/
 
+## Liste des champs
+
+### Date
+
+- DATE
+
+### Indexes
+
+- EAST
+- EASF01
+- EASF02
+- EASF03
+- EASF04
+- EASF05
+- EASF06
+- EASF07
+- EASF08
+- EASF09
+- EASF10
+- EASD01
+- EASD02
+- EASD03
+- EASD04
+
+### Puissance
+
+- SINSTS
+- URMS1
+- IRMS1
+
+### Horodatés
+
+- SMAXSN
+- CCASN
+- UMOY1
+
+### Annexes
+
+- STGE
+- MSG1
+
 ## Variables d'environement
 
 - `INFLUXDB_URL="http://mini-pc:8086"`

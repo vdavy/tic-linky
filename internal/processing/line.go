@@ -1,7 +1,6 @@
 package processing
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"strings"
 )
 
@@ -39,25 +38,14 @@ func (frameData *frameData) routeLineData(splitLine []string) {
 		easf01Field, easf02Field, easf03Field, easf04Field, easf05Field,
 		easf06Field, easf07Field, easf08Field, easf09Field, easf10Field,
 		easd01Field, easd02Field, easd03Field, easd04Field:
-		parseFieldAsUint64(frameData.indexMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
+		parseFieldAsInt64(frameData.indexesMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
 	case sinstsField, urms1Field, irms1Field:
-		parseFieldAsUint64(frameData.powerMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
+		parseFieldAsInt64(frameData.powerMap, splitLine[fieldNameIndex], splitLine[nonDatedFieldIndex])
 	case smaxsnField, ccasnField, umoy1Field:
 		frameData.parseDatedField(splitLine)
 	case stgeField:
 		frameData.parseSTGE(splitLine[dateFieldIndex])
 	case msg1Field:
 		frameData.messageValue = splitLine[dateFieldIndex]
-	}
-}
-
-// processEndOfFrame send the collected data to influxdb
-func (frameData *frameData) processEndOfFrame() {
-	logger.Debug("Data :")
-	spew.Dump(frameData)
-	for fieldName, flaggedToSend := range frameData.datedFieldsWriteFlagMap {
-		if flaggedToSend {
-			frameData.datedFieldsWriteFlagMap[fieldName] = false
-		}
 	}
 }
