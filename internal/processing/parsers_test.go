@@ -105,11 +105,31 @@ func TestParseSTGE_Case1(t *testing.T) {
 	currentFrameData.parseSTGE("003AC401")
 	assert.Equal(t, 2, currentFrameData.productionIndex)
 	assert.Equal(t, 4, currentFrameData.distributionIndex)
+
+	assert.True(t, currentFrameData.contactSecOuvertFlag)
+	assert.Equal(t, 0, currentFrameData.organeDeCoupureState)
+	assert.False(t, currentFrameData.cacheBorneDistributeurOuvertFlag)
+	assert.False(t, currentFrameData.surtensionFlag)
+	assert.False(t, currentFrameData.depassementPuissanceFlag)
+	assert.False(t, currentFrameData.horlogeModeDegradeFlag)
+	assert.Equal(t, 3, currentFrameData.communicationEuridisState)
+	assert.Equal(t, 1, currentFrameData.statusCPLState)
+	assert.False(t, currentFrameData.synchronisationCPLBool)
 }
 
 func TestParseSTGE_Case2(t *testing.T) {
 	initCurrentFrameData()
-	currentFrameData.parseSTGE("003A5401")
+	currentFrameData.parseSTGE("00CB54D4")
 	assert.Equal(t, 6, currentFrameData.productionIndex)
 	assert.Equal(t, 2, currentFrameData.distributionIndex)
+
+	assert.False(t, currentFrameData.contactSecOuvertFlag)
+	assert.Equal(t, 2, currentFrameData.organeDeCoupureState)
+	assert.True(t, currentFrameData.cacheBorneDistributeurOuvertFlag)
+	assert.True(t, currentFrameData.surtensionFlag)
+	assert.True(t, currentFrameData.depassementPuissanceFlag)
+	assert.True(t, currentFrameData.horlogeModeDegradeFlag)
+	assert.Equal(t, 1, currentFrameData.communicationEuridisState)
+	assert.Equal(t, 2, currentFrameData.statusCPLState)
+	assert.True(t, currentFrameData.synchronisationCPLBool)
 }

@@ -7,11 +7,7 @@ import (
 	"time"
 )
 
-const (
-	dateValueFormat    = "060102150405"
-	productionOffSet   = 10
-	distributionOffSet = 14
-)
+const dateValueFormat = "060102150405"
 
 // parseDate parse date field (used for influxdb point date)
 func parseDate(dateField **time.Time, dataValue string) {
@@ -68,7 +64,28 @@ func (frameData *frameData) parseSTGE(dataValue string) {
 		logger.WithError(err).Warnf("Error decoding STGE field value %s", dataValue)
 		return
 	}
+
 	stgeValue := binary.BigEndian.Uint32(hexBytes)
-	frameData.productionIndex = int((stgeValue&(0xF<<productionOffSet))>>productionOffSet) + 1
-	frameData.distributionIndex = int((stgeValue&(0x3<<distributionOffSet))>>distributionOffSet) + 1
+	frameData.productionIndex = extractInt(stgeValue, productionMask, productionOffSet, productionFinalOffSet)
+	frameData.distributionIndex = extractInt(stgeValue, distributionMask, distributionOffSet, distributionFinalOffSet)
+
+	frameData.contactSecOuvertFlag = extractBool(stgeValue, contactSecOffset)
+	frameData.organeDeCoupureState = extractInt(stgeValue, organeDeCoupureMask, organeDeCoupureOffset, organeDeCoupureFinalOffset)
+	frameData.cacheBorneDistributeurOuvertFlag = extractBool(stgeValue, cacheBorneDistributeurOffset)
+	frameData.surtensionFlag = extractBool(stgeValue, surtensionOffset)
+	frameData.depassementPuissanceFlag = extractBool(stgeValue, depassementPuissanceOffset)
+	frameData.horlogeModeDegradeFlag = extractBool(stgeValue, horlogeModeDegradeOffset)
+	frameData.communicationEuridisState = extractInt(stgeValue, communicationEuridisMask, communicationEuridisOffset, communicationEuridisFinalOffset)
+	frameData.statusCPLState = extractInt(stgeValue, statutCPLMask, statutCPLOffset, statutCPLFinalOffset)
+	frameData.synchronisationCPLBool = extractBool(stgeValue, synchronisationCPLOffset)
+}
+
+// extractInt extract an int value from STGE data
+func extractInt(initialValue, maskLength, maskOffset uint32, finalOffset int) int {
+	return int((initialValue&(maskLength<<maskOffset))>>maskOffset) + finalOffset
+}
+
+// extractBool extract a bool value from STGE data
+func extractBool(initialValue, maskOffset uint32) bool {
+	return int((initialValue&(0x1<<maskOffset))>>maskOffset) == 1
 }

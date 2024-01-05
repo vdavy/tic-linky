@@ -40,4 +40,7 @@ const (
 
 	// status reg
 	stgeField = "STGE"
+
+	// message field
+	msg1Field = "MSG1"
 )

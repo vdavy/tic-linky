@@ -3,25 +3,7 @@ package processing
 import (
 	"github.com/davecgh/go-spew/spew"
 	"strings"
-	"time"
 )
-
-// frameData context data struct
-type frameData struct {
-	date                    *time.Time
-	indexMap                map[string]uint64
-	productionIndex         int
-	distributionIndex       int
-	powerMap                map[string]uint64
-	datedFieldsMap          map[string]datedField
-	datedFieldsWriteFlagMap map[string]bool
-}
-
-// datedField type for dated field
-type datedField struct {
-	date  *time.Time
-	value uint64
-}
 
 // processLine process a single line od data
 func (frameData *frameData) processLine(line string) {
@@ -64,6 +46,8 @@ func (frameData *frameData) routeLineData(splitLine []string) {
 		frameData.parseDatedField(splitLine)
 	case stgeField:
 		frameData.parseSTGE(splitLine[dateFieldIndex])
+	case msg1Field:
+		frameData.messageValue = splitLine[dateFieldIndex]
 	}
 }
 
