@@ -58,6 +58,9 @@ screen /dev/ttyAMA0 9600,cs7,parenb,-parodd,-cstopb
 
 ## Variables d'environement
 
+- `#DEBUG="true"`
+- `SERIAL_PORT="/dev/ttyAMA0"`
+- `LED_GPIO=4`
 - `INFLUXDB_URL="http://mini-pc:8086"`
 - `INFLUXDB_USERNAME="tic-linky"`
 - `INFLUXDB_PASSWORD="tic-linky"`
